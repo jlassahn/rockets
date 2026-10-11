@@ -44,4 +44,23 @@ module Ogive_Cone(diameter, length, thickness, cap_d)
     }
 }
 
-//OgiveCone(diameter=33.655, length=137, thickness=0.4, cap_d=2);
+module Ogive_Transition(diameter1, diameter2, length, thickness)
+{
+    R1 = diameter1/2;
+    R2 = diameter2/2;
+    dR = R1 - R2;
+    R = (dR*dR + length*length)/(2*dR);
+    
+    rotate_extrude()
+    intersection()
+    {
+        translate([R1 - R, 0, 0])
+        circle(r = R);
+        
+        square(size = [R1, length]);
+    }
+}
+
+//Ogive_Cone(diameter=33.655, length=137, thickness=0.4, cap_d=2);
+//Ogive_Transition(diameter1=20, diameter2=10, length=20, thickness=1);
+
