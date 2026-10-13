@@ -9,7 +9,7 @@ module Ogive_Cone(diameter, length, thickness, cap_d)
     angle = asin(inset_l / inset_r_curve);
     r_curve = inset_r_curve + cap_d/2;
 
-    rotate_extrude($fn=64)
+    rotate_extrude()
     intersection()
     {
         union()
@@ -18,8 +18,8 @@ module Ogive_Cone(diameter, length, thickness, cap_d)
             {
                 difference()
                 {
-                    circle(r = r_curve, $fn=512);
-                    circle(r = r_curve-thickness, $fn=512);
+                    circle(r = r_curve);
+                    circle(r = r_curve-thickness);
                     rotate([0,0,angle]) square(r_curve);
                 }
             }
@@ -32,9 +32,9 @@ module Ogive_Cone(diameter, length, thickness, cap_d)
                 {
                     difference()
                     {
-                        circle(d = cap_d, $fn = 32);
+                        circle(d = cap_d);
                         if (cap_d > 2*thickness)
-                            circle(d = cap_d - 2*thickness, $fn=32);
+                            circle(d = cap_d - 2*thickness);
                     }
                     translate([0,-0.1,0])square(cap_d);
                 }
