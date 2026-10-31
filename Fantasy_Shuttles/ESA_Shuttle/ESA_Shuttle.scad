@@ -8,11 +8,64 @@ use <../../Printed_Parts/Tubes.scad>
 use <../../Printed_Parts/Skew_Cone.scad>
 use <../../Printed_Parts/Ogive_Cone.scad>
 
+
+module large_engine()
+{
+    difference()
+    {
+        scale([1,1,1.2])sphere(10);
+        scale([1,1,1.2])sphere(9);
+        translate([0,0,-10])
+        cube([20, 20, 20], center = true);
+    }
+}
+
 module booster()
 {
-    BT50(100);
+    translate([0,0,5])
+    BT50(95);
+    
     translate([0,0,100])
     Skew_Cone(BT50_OD, 60, 1, 5);
+   
+    translate([0,0,5])
+    scale([BT50_OR/10, BT50_OR/10, 0.5])
+    sphere(r=10);
+    translate([0,0,-3])large_engine();
+}
+
+module small_engine()
+{
+    difference()
+    {
+        scale([1,1,1.5])sphere(8);
+        scale([1,1,1.5])sphere(7);
+        translate([0,0,-10])
+        cube([20, 20, 20], center = true);
+    }
+}
+
+module rear()
+{
+    translate([0,0,10])
+    difference()
+    {
+        union()
+        {
+            scale([BT60_OR/10, BT60_OR/10, 1])
+            sphere(r=10);
+            translate([14, 0, -13])small_engine();
+            translate([-14, 0, -13])small_engine();
+            translate([0, 14, -13])small_engine();
+            translate([0, -14, -13])small_engine();
+        }
+        scale([BT60_OR/10 - 0.1, BT60_OR/10 - 0.1, 0.9])
+        sphere(r=10);        
+        cylinder(20, 40, 40);
+        cylinder(40, r=11, center = true);
+    }
+ 
+    //cylinder(10, 15, BT60_OR);
 }
 
 module body()
@@ -22,8 +75,6 @@ module body()
 
     translate([0,0,260])
     Ogive_Cone(BT60_OD, 75, 1, 8);
-
-    cylinder(10, 15, BT60_OR);
 }
 
 module fin()
@@ -31,6 +82,13 @@ module fin()
     rotate([0,90,0])
     linear_extrude(1.58,center=true)
     polygon([[0,0],[24,36],[48,36],[48,0]]);
+}
+
+module tail_fin()
+{
+    rotate([0,90,0])
+    linear_extrude(1.58,center=true)
+    polygon([[-20,0], [4.8,7.2],[24,36],[48,36],[48,0], [51,-5]]);
 }
 
 module wing()
@@ -73,17 +131,28 @@ module orbiter()
 
     translate([0,0,50])
     rotate([180,0,0])
-    Ogive_Transition(BT20_OD, 10, 50, 1);
+    Ogive_Transition(BT20_OD, 10, 53, 1);
 
     wing();
     mirror([1,0,0]) wing();
 
     translate([0,BT20_OR,48])
-    fin();
+    tail_fin();
 }
+
+module engine()
+{
+    cylinder(h=70, r = 9);
+}
+
+rear();
+translate([0,0,2])BT20(70);
+translate([0,0,-3]) engine();
+
 
 translate([0, BT60_OR + BT20_OR + 3, 0])
 orbiter();
 
+//color(c = [0,0,0,.5])
 stack();
 
