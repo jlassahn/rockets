@@ -31,3 +31,13 @@ module BT60(length)
         translate([0,0,-0.1])cylinder(h=length+0.2, r=BT60_IR);
     }
 }
+
+module LLUG(length)
+{
+    color(c = tube_color)
+    difference()
+    {
+        cylinder(h=length, r=LLUG_OR);
+        translate([0,0,-0.1])cylinder(h=length+0.2, r=LLUG_IR);
+    }
+}

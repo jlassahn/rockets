@@ -15,3 +15,10 @@ BT60_OD = 1.637*25.4;
 BT60_ID = 1.595*25.4;
 BT60_OR = BT60_OD/2;
 BT60_IR = BT60_ID/2;
+
+// Measured from an Estes example
+LLUG_OD = 4.5;
+LLUG_ID = 3.8;
+LLUG_OR = LLUG_OD/2;
+LLUG_IR = LLUG_ID/2;
+
