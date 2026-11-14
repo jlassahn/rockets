@@ -6,7 +6,6 @@ include <../../Printed_Parts/Rocket_Constants.scad>
 use <../../Printed_Parts/Tubes.scad>
 use <../../Printed_Parts/Ogive_Cone.scad>
 
-//translate([75,0,0])square([5, 55]);
 
 module canard()
 {
@@ -21,51 +20,93 @@ module canard()
 }
 
 
-module main_wing()
+_elevon_angle = atan(1/2);
+
+module _wing_base_outline()
 {
-    rotate([90,0,0])
-    linear_extrude(1.58, center=true)
     difference()
     {
         square([70, 180]);
 
-        translate([145, 180, 0])circle(r=145);
-        //translate([0,20,0]) rotate([0,0,-107]) square(75);
-        translate([0,-110,0]) circle(r=130);
+        translate([145, 180])circle(r=145);
+        translate([0,-110]) circle(r=130);
     }
+    translate([65,20])
+    square([10,30]);
+}
+
+module _wing_outline()
+{
+    translate([0,50])
+    rotate([0,0,-_elevon_angle])
+    intersection()
+    {
+        rotate([0,0,_elevon_angle])
+        translate([0,-50])
+        _wing_base_outline();
+
+        translate([-100,0])
+        square([200, 200]);
+    }
+}
+
+module _elevon_outline()
+{
+    translate([0,50])
+    rotate([0,0,-_elevon_angle])
+    intersection()
+    {
+        rotate([0,0,_elevon_angle])
+        translate([0,-50])
+        _wing_base_outline();
+
+        translate([-100,-200])
+        square([200, 200]);
+    }
+}
+
+module _fin_outline()
+{
+    difference()
+    {
+        _wing_base_outline();
+        translate([0,120])
+        square([BT60_OR - BT20_OR, 100]);
+    }
+}
+
+module _fin()
+{
+    rotate([90,0,0])
+    linear_extrude(1.58, center=true)
+    _fin_outline();
+}
+
+module _wing()
+{
+    rotate([90,0,0])
+    linear_extrude(1.58, center=true)
+    _wing_outline();
+}
+
+module _elevon(trim)
+{
+    
+    translate([0,0,50])
+    rotate([0,_elevon_angle,0])
+    rotate([trim,0,0])
+    rotate([0,-_elevon_angle,0])
+    translate([0,0,-50])
+
+    rotate([90,0,0])
+    linear_extrude(1.58, center=true)
+    _elevon_outline();
 }
 
 module wing()
 {
-    translate([0,0,50])
-    rotate([0,25,0])
-    difference()
-    {
-        rotate([0,-25,0])
-        translate([0,0,-50])
-        main_wing();
-        mirror([0,0,1])
-        translate([0,-5,0])
-        cube([150,10, 100]);
-    }
-    
-    translate([0,0,50])
-    rotate([0,25,0])
-    rotate([15,0,0])
-    intersection()
-    {
-        rotate([0,-25,0])
-        translate([0,0,-50])
-        intersection()
-        {
-            main_wing();
-            cube([130,10,400], center=true);
-        }
-        mirror([0,0,1])
-        translate([0,-5,0])
-        cube([150, 10, 100]);
-    }
-    
+    _wing();
+    _elevon(15);
     translate([70,0,27.5])
     Ogive_Cone(10, 60, 1, 3);
     translate([70,0,27.5])
@@ -125,7 +166,7 @@ module booster()
         translate([70,0,27.5])
         rotate([180,0,0])
         Ogive_Cone(10, 60, 1, 3);
-        main_wing();
+        _fin();
     }
 }
 
@@ -133,3 +174,5 @@ translate([0, BT60_OR + BT20_OR + 3, 0])
 orbiter();
 
 booster();
+
+
