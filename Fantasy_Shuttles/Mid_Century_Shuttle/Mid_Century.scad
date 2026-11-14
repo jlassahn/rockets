@@ -73,32 +73,63 @@ module wing()
     Ogive_Cone(10, 60, 1, 3);
 }
 
+module orbiter()
+{
+    mirror([1,0,0])
+    rotate([0,0,15])
+    translate([BT20_OR, 0, 0])
+    wing();
 
-mirror([1,0,0])
-rotate([0,0,15])
-translate([BT20_OR, 0, 0])
-wing();
+    rotate([0,0,15])
+    translate([BT20_OR, 0, 0])
+    wing();
 
-rotate([0,0,15])
-translate([BT20_OR, 0, 0])
-wing();
+    //translate([0,0,50]) BT20(150);
+    translate([0,0,50]) BT20(130);
 
-//translate([0,0,50]) BT20(150);
-translate([0,0,50]) BT20(130);
+    translate([0,0,50])
+    rotate([180,0,0])
+    Ogive_Transition(BT20_OD, 12, 30, 1);
 
-translate([0,0,50])
-rotate([180,0,0])
-Ogive_Transition(BT20_OD, 12, 30, 1);
+    //translate([0,0,200])
+    translate([0,0,180])
+    Ogive_Cone(BT20_OD, 80, 1, 3);
 
-//translate([0,0,200])
-translate([0,0,180])
-Ogive_Cone(BT20_OD, 80, 1, 3);
+    /*
+    translate([BT20_OR, 0, 160])
+    canard();
 
-/*
-translate([BT20_OR, 0, 160])
-canard();
+    mirror([1,0,0])
+    translate([BT20_OR, 0, 160])
+    canard();
+    */
+}
 
-mirror([1,0,0])
-translate([BT20_OR, 0, 160])
-canard();
-*/
+module booster()
+{
+    translate([0,0,320])
+    Ogive_Cone(BT60_OD, 150, 1, 3);
+
+    translate([0,0,120])
+    BT60(200);
+
+    translate([0,0,120])
+    rotate([180,0,0])
+    Ogive_Transition(BT60_OD, BT20_OD, 100, 1);
+
+    rotate([0,0,-90])
+    translate([BT20_OR, 0, 0])
+    {
+        translate([70,0,27.5])
+        Ogive_Cone(10, 60, 1, 3);
+        translate([70,0,27.5])
+        rotate([180,0,0])
+        Ogive_Cone(10, 60, 1, 3);
+        main_wing();
+    }
+}
+
+translate([0, BT60_OR + BT20_OR + 3, 0])
+orbiter();
+
+booster();
