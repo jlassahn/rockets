@@ -20,8 +20,9 @@ module canard()
 }
 
 
+_pod_r = (10-3)/4 + (60-3/2)*(60-3/2)/(10-3) + 3/2;
 _elevon_angle = atan(1/2);
-
+// echo(_pod_r);  // = 492.143
 module _wing_base_outline()
 {
     difference()
@@ -30,6 +31,9 @@ module _wing_base_outline()
 
         translate([145, 180])circle(r=145);
         translate([0,-110]) circle(r=130);
+
+        translate([70 + _pod_r - 2, 27.5])
+        circle(_pod_r);
     }
     translate([65,20])
     square([10,30]);
@@ -103,15 +107,29 @@ module _elevon(trim)
     _elevon_outline();
 }
 
+module _pod()
+{
+    translate([73,0,27.5])
+    {
+        difference()
+        {
+            union()
+            {
+                Ogive_Cone(10, 60, 1, 3);
+                rotate([180,0,0])
+                Ogive_Cone(10, 60, 1, 3);
+            }
+            translate([-10,-1,19.5 - 27.5])
+            cube([10,2,31]);
+        }
+    }
+}
+
 module wing()
 {
     _wing();
     _elevon(15);
-    translate([70,0,27.5])
-    Ogive_Cone(10, 60, 1, 3);
-    translate([70,0,27.5])
-    rotate([180,0,0])
-    Ogive_Cone(10, 60, 1, 3);
+    _pod();
 }
 
 module orbiter()
@@ -161,12 +179,8 @@ module booster()
     rotate([0,0,-90])
     translate([BT20_OR, 0, 0])
     {
-        translate([70,0,27.5])
-        Ogive_Cone(10, 60, 1, 3);
-        translate([70,0,27.5])
-        rotate([180,0,0])
-        Ogive_Cone(10, 60, 1, 3);
         _fin();
+        _pod();
     }
 }
 
@@ -174,5 +188,3 @@ translate([0, BT60_OR + BT20_OR + 3, 0])
 orbiter();
 
 booster();
-
-
